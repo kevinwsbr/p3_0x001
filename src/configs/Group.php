@@ -10,6 +10,10 @@ class Group {
         $this->db = $db;
     }
 
+    public function getID() {
+        return $this->ID;
+    }
+
     public function getName() {
         return $this->name;
     }
@@ -64,6 +68,7 @@ class Group {
             $db->bindValue(':idadmin', $_SESSION['user']['ID'],PDO::PARAM_STR);
             
             $db->execute();
+            
             header('Location: index.php');
         }
     }

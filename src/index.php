@@ -3,17 +3,19 @@
 require 'configs/Database.php';
 require 'configs/User.php';
 require 'configs/Group.php';
+require 'configs/Message.php';
 
 $conn = new Database();
 $conn->protectPage();
 
 $user = new User($conn->db);
 $group = new Group($conn->db);
+$message = new Message($conn->db);
 
 $groups = $group->getGroups();
 
 $user->setData($user->getUser($_SESSION['user']['username']));
-
+$messages = $message->getMessages($user->getID());
 ?>
 
 <!doctype html>
@@ -34,13 +36,14 @@ $user->setData($user->getUser($_SESSION['user']['username']));
   <?php require_once 'components/sidebar-profile.php'; ?>
   <div class="col-md-6 gedf-main">
     <h4>Minhas mensagens</h4>
-    <div class="card gedf-card">
+    <?php foreach ($messages as $item) {?>       
+    <div class="card gedf-card my-3">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <div class="h5 m-0">@LeeCross</div>
-              <div class="h7 text-muted">Miracles Lee Cross</div>
+              <div class="h5 m-0"><?php echo $item['name']?></div>
+              <div class="h7 text-muted">@<?php echo $item['username']?></div>
             </div>
           </div>
         </div>
@@ -48,12 +51,11 @@ $user->setData($user->getUser($_SESSION['user']['username']));
       </div>
       <div class="card-body">
         <p class="card-text">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa
-          praesentium esse magnam nemo dolor
-          sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.
+          <?php echo $item['content']?>
         </p>
       </div>
     </div>
+    <?php } ?>
   </div>
   <div class="col-md-3">
     <div class="card gedf-card">
@@ -61,7 +63,7 @@ $user->setData($user->getUser($_SESSION['user']['username']));
         <h5 class="card-title">Comunidades</h5>
         <a class="btn btn-outline-primary btn-sm mb-2" href="create-group.php" role="button">Criar comunidade</a>
 
-        <ul class="list-group">
+        <ul class="list-unstyled">
           <?php foreach ($groups as $item) {?>
             <li><a href="groups.php?id=<?php echo $item['ID'] ?>"><?php echo $item['name'] ?></a></li>
             <?php } ?>

@@ -3,19 +3,23 @@
 require 'configs/Database.php';
 require 'configs/User.php';
 require 'configs/Group.php';
+require 'configs/Message.php';
 
 $conn = new Database();
 $conn->protectPage();
 
 $user = new User($conn->db);
 $displayedUser = new User($conn->db);
+$message = new Message($conn->db);
+
 
 $group = new Group($conn->db);
 $group->setData($group->getGroup($_GET['id']));
 $members = $group->getMembers();
 
 $user->setData($user->getUser($_SESSION['user']['username']));
-
+$message->sendGroupMessage($_GET['id']);
+$messages = $message->getGroupMessages($_GET['id']);
 ?>
 
 <!doctype html>
@@ -42,54 +46,61 @@ $user->setData($user->getUser($_SESSION['user']['username']));
     <!--- \\\\\\\Post-->
 
     <div class="h4"><?php echo $group->getName(); ?></div>
-    <div class="h7 text-muted">Comunidade do iFace</div>
+    <div class="h7 text-muted"><?php echo $group->getDescription(); ?></div>
     <a class="btn btn-outline-primary btn-sm mt-2" href="../settings.php" role="button">Ingressar</a>
 
+    <div class="card gedf-card my-4">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link active" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts"
+              aria-selected="true">Enviar mensagem</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        <div class="tab-content" id="myTabContent">
+          <form action="groups.php?id=<?php echo $group->getID(); ?>" method="POST">
+<div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+            <div class="form-group">
+              <label class="sr-only" for="message">post</label>
+              <textarea name="message" class="form-control" id="message" rows="3" placeholder="Insira aqui sua mensagem..."></textarea>
+            </div>
+
+          </div>
+        </div>
+        <div class="btn-toolbar justify-content-between">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Enviar</button>
+          </div>
+        </div>
+          </form>
+          
+      </div>
+    </div>
+
     <!--- \\\\\\\Post-->
-    <div class="card gedf-card">
+    <h4>Mensagens do grupo</h4>
+    <?php foreach ($messages as $msg) {?>       
+    <div class="card gedf-card my-3">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <div class="h5 m-0">@LeeCross</div>
-              <div class="h7 text-muted">Miracles Lee Cross</div>
-            </div>
-          </div>
-          <div>
-            <div class="dropdown">
-              <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-ellipsis-h"></i>
-              </button>
-              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
-                <div class="h6 dropdown-header">Configuration</div>
-                <a class="dropdown-item" href="#">Save</a>
-                <a class="dropdown-item" href="#">Hide</a>
-                <a class="dropdown-item" href="#">Report</a>
-              </div>
+              <div class="h5 m-0"><?php echo $msg['name']?></div>
+              <div class="h7 text-muted">@<?php echo $msg['username']?></div>
             </div>
           </div>
         </div>
 
       </div>
       <div class="card-body">
-        <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i>10 min ago</div>
-        <a class="card-link" href="#">
-          <h5 class="card-title">Lorem ipsum dolor sit amet, consectetur adip.</h5>
-        </a>
-
         <p class="card-text">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo recusandae nulla rem eos ipsa
-          praesentium esse magnam nemo dolor
-          sequi fuga quia quaerat cum, obcaecati hic, molestias minima iste voluptates.
+          <?php echo $msg['content']?>
         </p>
       </div>
-      <div class="card-footer">
-        <a href="#" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-        <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a>
-        <a href="#" class="card-link"><i class="fa fa-mail-forward"></i> Share</a>
-      </div>
     </div>
+    <?php } ?>
   </div>
   <div class="col-md-3">
     <div class="card gedf-card">

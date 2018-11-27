@@ -2,15 +2,19 @@
 
 require 'configs/Database.php';
 require 'configs/User.php';
+require 'configs/Message.php';
 
 $conn = new Database();
 $conn->protectPage();
 
 $user = new User($conn->db);
+$message = new Message($conn->db);
+
 $displayedUser = new User($conn->db);
 
 $user->setData($user->getUser($_SESSION['user']['username']));
 $displayedUser->setData($user->getUser($_GET['id']));
+$message->sendMessage($_GET['id']);
 
 ?>
 
@@ -55,7 +59,7 @@ $displayedUser->setData($user->getUser($_GET['id']));
       </div>
       <div class="card-body">
         <div class="tab-content" id="myTabContent">
-          <form action="" method="POST">
+          <form action="users.php?id=<?php echo $displayedUser->getID(); ?>" method="POST">
 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
             <div class="form-group">
               <label class="sr-only" for="message">post</label>

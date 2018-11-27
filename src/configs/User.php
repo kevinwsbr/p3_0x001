@@ -60,6 +60,10 @@ class User {
         return $this->name;
     }
 
+    public function getID() {
+        return $this->ID;
+    }
+
     public function getEmail() {
         return $this->email;
     }
