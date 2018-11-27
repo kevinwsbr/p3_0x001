@@ -1,5 +1,6 @@
 <?php
 class Group {
+    private $ID;
     private $name;
     private $description;
     protected $db;
@@ -7,6 +8,39 @@ class Group {
     public function __construct($db)
     {
         $this->db = $db;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setData($group) {
+        $this->ID = $group['ID'];
+        $this->name = $group['name'];
+        $this->description = $group['description'];
+    }
+
+    public function getGroups() {
+        $sql='SELECT * FROM `groups`;';
+
+        $db=$this->db->prepare($sql);
+        $db->execute();
+
+        return $db->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getGroup($group) {
+        $sql='SELECT * FROM `groups` WHERE `groups`.`ID` = :id ;';
+
+        $db=$this->db->prepare($sql);
+        $db->bindValue(':id', $group, PDO::PARAM_STR);
+        $db->execute();
+
+        return $db->fetch(PDO::FETCH_ASSOC);
     }
 
     public function register()

@@ -2,6 +2,7 @@
 
 require 'configs/Database.php';
 require 'configs/User.php';
+require 'configs/Group.php';
 
 $conn = new Database();
 $conn->protectPage();
@@ -9,8 +10,10 @@ $conn->protectPage();
 $user = new User($conn->db);
 $displayedUser = new User($conn->db);
 
+$group = new Group($conn->db);
+$group->setData($group->getGroup($_GET['id']));
+
 $user->setData($user->getUser($_SESSION['user']['username']));
-$displayedUser->setData($user->getUser($_GET['id']));
 
 ?>
 
@@ -26,7 +29,7 @@ $displayedUser->setData($user->getUser($_GET['id']));
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
     crossorigin="anonymous">
 
-  <title>Hello, world!</title>
+  <title><?php echo $group->getName(); ?> | iFace</title>
 </head>
 
 <body>
@@ -37,8 +40,9 @@ $displayedUser->setData($user->getUser($_GET['id']));
 
     <!--- \\\\\\\Post-->
 
-    <div class="h4">iFace</div>
+    <div class="h4"><?php echo $group->getName(); ?></div>
     <div class="h7 text-muted">Comunidade do iFace</div>
+    <a class="btn btn-outline-primary btn-sm mt-2" href="../settings.php" role="button">Ingressar</a>
 
     <!--- \\\\\\\Post-->
     <div class="card gedf-card">
@@ -89,17 +93,7 @@ $displayedUser->setData($user->getUser($_GET['id']));
   <div class="col-md-3">
     <div class="card gedf-card">
       <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-          card's content.</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
-      </div>
-    </div>
-    <div class="card gedf-card">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
+        <h5 class="card-title">Membros</h5>
         <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
           card's content.</p>
