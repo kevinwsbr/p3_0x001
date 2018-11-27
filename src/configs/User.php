@@ -88,7 +88,7 @@ class User {
     }
 
     public function getRequestedFriends() {
-        $sql='SELECT `name`, `username` FROM `users` INNER JOIN `friendships` ON `friendships`.`idsender` = `users`.`ID` WHERE `friendships`.`idreceiver` = :user AND `friendships`.`status` = "REQUESTED";';
+        $sql='SELECT `ID`, `name`, `username` FROM `users` INNER JOIN `friendships` ON `friendships`.`idsender` = `users`.`ID` WHERE `friendships`.`idreceiver` = :user AND `friendships`.`status` = "REQUESTED";';
 
         $db=$this->db->prepare($sql);
         $db->bindValue(':user', $this->ID,PDO::PARAM_STR);
@@ -108,8 +108,20 @@ class User {
         } 
     }
 
+    public function rejectFriendship($friend) {
+        if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['reject'])) {
+
+            $sql='DELETE FROM `friendships` WHERE `friendships`.`idreceiver` = :iduser AND `friendships`.`idsender` = :idsender;';  
+
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':iduser', $this->ID,PDO::PARAM_STR);
+            $db->bindValue(':idsender', $friend,PDO::PARAM_STR);
+            $db->execute();
+        } 
+    }
+
     public function getConfirmedFriends() {
-        $sql='SELECT `name`, `username` FROM `users` INNER JOIN `friendships` ON `friendships`.`idsender` = `users`.`ID` WHERE `friendships`.`idreceiver` = :user AND `friendships`.`status` = "REQUESTED";';
+        $sql='SELECT `ID`, `name`, `username` FROM `users` INNER JOIN `friendships` ON (`friendships`.`idsender` = `users`.`ID` OR `friendships`.`idreceiver` = `users`.`ID`) WHERE (`friendships`.`idreceiver` = :user OR `friendships`.`idsender` = :user) AND `friendships`.`status` = "ACCEPTED" AND `users`.`ID` != :user;';
 
         $db=$this->db->prepare($sql);
         $db->bindValue(':user', $this->ID,PDO::PARAM_STR);

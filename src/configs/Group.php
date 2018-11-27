@@ -1,6 +1,7 @@
 <?php
 class Group {
     private $ID;
+    private $IDAdmin;
     private $name;
     private $description;
     protected $db;
@@ -14,6 +15,10 @@ class Group {
         return $this->ID;
     }
 
+    public function getIDAdmin() {
+        return $this->IDAdmin;
+    }
+
     public function getName() {
         return $this->name;
     }
@@ -22,8 +27,23 @@ class Group {
         return $this->description;
     }
 
+    public function removeMember() {
+        if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['remove'])) {
+            $sql='DELETE FROM `groups_and_users` WHERE `groups_and_users`.`idgroup` = :idgroup AND `groups_and_users`.`iduser` = :iduser;';
+            
+            $db=$this->db->prepare($sql);
+
+            $db->bindValue(':iduser', $_GET['iduser'], PDO::PARAM_STR);
+            $db->bindValue(':idgroup', $this->ID, PDO::PARAM_STR);
+
+            $db->execute();
+
+            header('Location: groups.php?id=' . $this->ID);
+        }
+    }
+
     public function getMembers() {
-        $sql='SELECT `name`, `username` FROM `users` INNER JOIN `groups_and_users` ON `users`.`ID` = `groups_and_users`.`iduser` WHERE `groups_and_users`.`idgroup` = :idgroup;';
+        $sql='SELECT `ID`, `name`, `username` FROM `users` INNER JOIN `groups_and_users` ON `users`.`ID` = `groups_and_users`.`iduser` WHERE `groups_and_users`.`idgroup` = :idgroup;';
 
         $db=$this->db->prepare($sql);
         $db->bindValue(':idgroup', $this->ID, PDO::PARAM_STR);
@@ -34,6 +54,7 @@ class Group {
 
     public function setData($group) {
         $this->ID = $group['ID'];
+        $this->IDAdmin = $group['idadmin'];
         $this->name = $group['name'];
         $this->description = $group['description'];
     }

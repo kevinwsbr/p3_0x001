@@ -31,10 +31,12 @@ $requestedFriends = $user->getRequestedFriends();
                         <?php foreach ($requestedFriends as $item) {?>
                         <li>
                         <a href="users.php?id=<?php echo $item['username'] ?>"><?php echo $item['name'] ?></a>
-                        <form action="users.php?id=<?php echo $displayedUser->getUsername() ?>&confirm=true" method="POST">
-                            <button type="submit" class="badge badge-success">Confirmar</button>
+                        <form class="d-inline" action="users.php?id=<?php echo $item['username'] ?>&confirm=true" method="POST">
+                            <button type="submit" class="btn badge badge-success">Confirmar</button>
                         </form>
-                        <span class="badge badge-danger">Recusar</span>
+                        <form class="d-inline" action="users.php?id=<?php echo $item['username'] ?>&reject=true" method="POST">
+                            <button type="submit" class="btn badge badge-danger">Recusar</button>
+                        </form>
                         </li>
                         <?php } ?>
                         </ul>
