@@ -14,6 +14,9 @@ $displayedUser = new User($conn->db);
 
 $user->setData($user->getUser($_SESSION['user']['username']));
 $displayedUser->setData($user->getUser($_GET['id']));
+
+$user->sendRequest();
+$user->confirmFriendship($displayedUser->getID());
 $message->sendMessage($_GET['id']);
 
 ?>
@@ -45,7 +48,9 @@ $message->sendMessage($_GET['id']);
         <h6 class="card-subtitle mb-2 text-muted">@
           <?php echo $displayedUser->getUsername() ?>
         </h6>
-        <a href="#" class="card-link">Adicionar amigo</a>
+        <form action="users.php?id=<?php echo $displayedUser->getUsername() ?>&receiver=<?php echo $displayedUser->getID() ?>&request=true" method="POST">
+        <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Adicionar amigo</button>
+        </form>
       </div>
     </div>
     <div class="card gedf-card mb-4">
@@ -59,7 +64,7 @@ $message->sendMessage($_GET['id']);
       </div>
       <div class="card-body">
         <div class="tab-content" id="myTabContent">
-          <form action="users.php?id=<?php echo $displayedUser->getID(); ?>" method="POST">
+          <form action="users.php?id=<?php echo $displayedUser->getID(); ?>&message=true" method="POST">
 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
             <div class="form-group">
               <label class="sr-only" for="message">post</label>

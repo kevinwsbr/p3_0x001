@@ -87,6 +87,66 @@ class User {
         }
     }
 
+    public function getRequestedFriends() {
+        $sql='SELECT `name`, `username` FROM `users` INNER JOIN `friendships` ON `friendships`.`idsender` = `users`.`ID` WHERE `friendships`.`idreceiver` = :user AND `friendships`.`status` = "REQUESTED";';
+
+        $db=$this->db->prepare($sql);
+        $db->bindValue(':user', $this->ID,PDO::PARAM_STR);
+        $db->execute();
+
+        return $db->fetchAll(PDO::FETCH_ASSOC);  
+    }
+
+    public function confirmFriendship($friend) {
+        if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['confirm'])) {
+            $sql='UPDATE `friendships` SET `status` = "ACCEPTED" WHERE `friendships`.`idreceiver` = :iduser AND `friendships`.`idsender` = :idfriend';
+
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':iduser', $this->ID,PDO::PARAM_STR);
+            $db->bindValue(':idfriend', $friend,PDO::PARAM_STR);
+            $db->execute();
+        } 
+    }
+
+    public function getConfirmedFriends() {
+        $sql='SELECT `name`, `username` FROM `users` INNER JOIN `friendships` ON `friendships`.`idsender` = `users`.`ID` WHERE `friendships`.`idreceiver` = :user AND `friendships`.`status` = "REQUESTED";';
+
+        $db=$this->db->prepare($sql);
+        $db->bindValue(':user', $this->ID,PDO::PARAM_STR);
+        $db->execute();
+
+        return $db->fetchAll(PDO::FETCH_ASSOC);  
+    }
+
+    public function sendRequest()
+    {
+        if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['request'])) {
+            $sql='INSERT INTO `friendships` (`idsender`,`idreceiver`,`status`) VALUES (:idsender,:idreceiver,:status);';
+            
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':idsender', $_SESSION['user']['ID'],PDO::PARAM_STR);
+            $db->bindValue(':idreceiver', $_GET['receiver'],PDO::PARAM_STR);
+            $db->bindValue(':status', "REQUESTED",PDO::PARAM_STR);
+            
+            $db->execute();
+            header('Location: users.php?id=' . $_GET['id']);
+        }
+    }
+
+    public function joinGroup($group)
+    {
+        if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['join'])) {
+            $sql='INSERT INTO `groups_and_users` (`idgroup`,`iduser`) VALUES (:idgroup,:iduser);';
+            
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':idgroup', $group,PDO::PARAM_STR);
+            $db->bindValue(':iduser', $_SESSION['user']['ID'],PDO::PARAM_STR);
+            
+            $db->execute();
+            header('Location: groups.php?id=' . $group);
+        }
+    }
+
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD']=='POST') {

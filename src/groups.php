@@ -18,6 +18,9 @@ $group->setData($group->getGroup($_GET['id']));
 $members = $group->getMembers();
 
 $user->setData($user->getUser($_SESSION['user']['username']));
+$user->joinGroup($group->getID());
+$friends = $user->getConfirmedFriends();
+$requestedFriends = $user->getRequestedFriends();
 $message->sendGroupMessage($_GET['id']);
 $messages = $message->getGroupMessages($_GET['id']);
 ?>
@@ -47,7 +50,9 @@ $messages = $message->getGroupMessages($_GET['id']);
 
     <div class="h4"><?php echo $group->getName(); ?></div>
     <div class="h7 text-muted"><?php echo $group->getDescription(); ?></div>
-    <a class="btn btn-outline-primary btn-sm mt-2" href="../settings.php" role="button">Ingressar</a>
+    <form action="groups.php?id=<?php echo $group->getID(); ?>&join=true" method="POST">
+    <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Ingressar</button>
+    </form>
 
     <div class="card gedf-card my-4">
       <div class="card-header">
@@ -60,7 +65,7 @@ $messages = $message->getGroupMessages($_GET['id']);
       </div>
       <div class="card-body">
         <div class="tab-content" id="myTabContent">
-          <form action="groups.php?id=<?php echo $group->getID(); ?>" method="POST">
+          <form action="groups.php?id=<?php echo $group->getID(); ?>&message=true" method="POST">
 <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
             <div class="form-group">
               <label class="sr-only" for="message">post</label>
@@ -106,7 +111,7 @@ $messages = $message->getGroupMessages($_GET['id']);
     <div class="card gedf-card">
       <div class="card-body">
         <h5 class="card-title">Membros</h5>
-        <ul class="list-group">
+        <ul class="list-unstyled">
           <?php foreach ($members as $item) {?>
             <li><a href="users.php?id=<?php echo $item['username'] ?>"><?php echo $item['name'] ?></a></li>
             <?php } ?>
