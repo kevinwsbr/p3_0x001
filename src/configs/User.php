@@ -22,6 +22,15 @@ class User {
 
         return $db->fetch(PDO::FETCH_ASSOC);
     }
+    
+    public function getUsers() {
+        $sql='SELECT `name`, `email`, `username` FROM `users`;';
+
+        $db=$this->db->prepare($sql);
+        $db->execute();
+
+        return $db->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     public function setData($user) {
         $this->ID = $user['ID'];
@@ -57,6 +66,21 @@ class User {
 
     public function getUsername() {
         return $this->username;
+    }
+
+    public function sendMessage($user)
+    {
+        if ($_SERVER['REQUEST_METHOD']=='POST') {
+            $sql='INSERT INTO `users_messages` (`idsender`,`idreceiver`,`content`) VALUES (:idsender,:idreceiver,:content);';
+            
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':idsender', $_SESSION['user']['username'],PDO::PARAM_STR);
+            $db->bindValue(':idreceiver', $user,PDO::PARAM_STR);
+            $db->bindValue(':content', $_POST['message'],PDO::PARAM_STR);
+            
+            $db->execute();
+            header('Location: index.php');
+        }
     }
 
     public function register()

@@ -18,6 +18,16 @@ class Group {
         return $this->description;
     }
 
+    public function getMembers() {
+        $sql='SELECT `name`, `username` FROM `users` INNER JOIN `groups_and_users` ON `users`.`ID` = `groups_and_users`.`iduser` WHERE `groups_and_users`.`idgroup` = :idgroup;';
+
+        $db=$this->db->prepare($sql);
+        $db->bindValue(':idgroup', $this->ID, PDO::PARAM_STR);
+        $db->execute();
+
+        return $db->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function setData($group) {
         $this->ID = $group['ID'];
         $this->name = $group['name'];

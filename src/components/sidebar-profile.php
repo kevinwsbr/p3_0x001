@@ -7,8 +7,7 @@
                     <div class="h5">
                         <?php echo $user->getName() ?>
                     </div>
-                    <div class="h7 text-muted">@
-                        <?php echo $user->getUsername() ?>
+                    <div class="h7 text-muted">@<?php echo $user->getUsername() ?>
                     </div>
                     <a class="btn btn-outline-primary btn-sm mt-2" href="../settings.php" role="button">Editar perfil</a>
                 </div>

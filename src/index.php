@@ -2,11 +2,15 @@
 
 require 'configs/Database.php';
 require 'configs/User.php';
+require 'configs/Group.php';
 
 $conn = new Database();
 $conn->protectPage();
 
 $user = new User($conn->db);
+$group = new Group($conn->db);
+
+$groups = $group->getGroups();
 
 $user->setData($user->getUser($_SESSION['user']['username']));
 
@@ -56,8 +60,12 @@ $user->setData($user->getUser($_SESSION['user']['username']));
       <div class="card-body">
         <h5 class="card-title">Comunidades</h5>
         <a class="btn btn-outline-primary btn-sm mb-2" href="create-group.php" role="button">Criar comunidade</a>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-          card's content.</p>
+
+        <ul class="list-group">
+          <?php foreach ($groups as $item) {?>
+            <li><a href="groups.php?id=<?php echo $item['ID'] ?>"><?php echo $item['name'] ?></a></li>
+            <?php } ?>
+        </ul>
       </div>
     </div>
   </div>

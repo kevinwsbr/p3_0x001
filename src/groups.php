@@ -12,6 +12,7 @@ $displayedUser = new User($conn->db);
 
 $group = new Group($conn->db);
 $group->setData($group->getGroup($_GET['id']));
+$members = $group->getMembers();
 
 $user->setData($user->getUser($_SESSION['user']['username']));
 
@@ -94,11 +95,11 @@ $user->setData($user->getUser($_SESSION['user']['username']));
     <div class="card gedf-card">
       <div class="card-body">
         <h5 class="card-title">Membros</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-          card's content.</p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
+        <ul class="list-group">
+          <?php foreach ($members as $item) {?>
+            <li><a href="users.php?id=<?php echo $item['username'] ?>"><?php echo $item['name'] ?></a></li>
+            <?php } ?>
+        </ul>
       </div>
     </div>
   </div>
