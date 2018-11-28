@@ -11,6 +11,7 @@ iFace is a fictional social network written in PHP and created as the first proj
 - Create communities (groups) and manage their members
 - Enter public communities (groups)
 - View users profile and communities page
+- Delete your account
 
 ## Dependencies
 
