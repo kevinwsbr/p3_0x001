@@ -31,7 +31,27 @@ class User {
 
         return $db->fetchAll(PDO::FETCH_ASSOC);
     }
+/*
+    public function deleteMe() {
+        $sql='DELETE FROM `users_messages` WHERE `users_messages`.`idsender` = :iduser OR `users_messages`.`idreceiver` = :iduser;';
 
+        $sql='DELETE FROM `groups_messages` WHERE `groups_messages`.`idsender` = :iduser;';
+
+        $sql='DELETE FROM `friendships` WHERE `friendships`.`idsender` = :iduser OR `friendships`.`idreceiver` = :iduser;';
+
+        $sql='DELETE FROM `groups_and_users` WHERE `groups_and_users`.`iduser` = :iduser;';
+
+        $sql='DELETE FROM `groups` WHERE `groups`.`idadmin` = :iduser;';
+
+        $sql='DELETE FROM `users` WHERE `users`.`ID` = :iduser;';
+
+        $db->bindValue(':iduser', $this->ID,PDO::PARAM_STR);
+        // $sql='SELECT `name`, `email`, `username` FROM `users`;';
+
+        $db=$this->db->prepare($sql);
+        $db->execute();
+    }
+*/
     public function setData($user) {
         $this->ID = $user['ID'];
         $this->name = $user['name'];
