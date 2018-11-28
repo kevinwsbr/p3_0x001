@@ -10,6 +10,8 @@ $user = new User($conn->db);
 
 $user->setData($user->getUser($_SESSION['user']['username']));
 $user->updateData();
+
+$user->deleteMe();
 ?>
 
 <!doctype html>
@@ -58,6 +60,10 @@ $user->updateData();
         <small>Insira sua senha atual para confirmar as alterações.</small>
       </div>
       <button type="submit" class="btn btn-primary">Atualizar</button>
+    </form>
+    <form action="settings.php?delete=true" method="post">
+      <div class="dropdown-divider"></div>
+      <button type="submit" class="btn btn-danger">Apagar meus dados</button>
     </form>
   </div>
   </div>

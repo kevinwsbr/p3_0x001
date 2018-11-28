@@ -31,27 +31,20 @@ class User {
 
         return $db->fetchAll(PDO::FETCH_ASSOC);
     }
-/*
+
     public function deleteMe() {
-        $sql='DELETE FROM `users_messages` WHERE `users_messages`.`idsender` = :iduser OR `users_messages`.`idreceiver` = :iduser;';
+        if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['delete'])) {
+            $sql='SET foreign_key_checks = 0; DELETE FROM `users_messages` WHERE `users_messages`.`idsender` = :iduser OR `users_messages`.`idreceiver` = :iduser; DELETE FROM `groups_messages` WHERE `groups_messages`.`idsender` = :iduser; DELETE FROM `friendships` WHERE `friendships`.`idsender` = :iduser OR `friendships`.`idreceiver` = :iduser; DELETE FROM `groups_and_users` WHERE `groups_and_users`.`iduser` = :iduser; DELETE FROM `groups` WHERE `groups`.`idadmin` = :iduser; DELETE FROM `users` WHERE `users`.`ID` = :iduser;';
+            $db=$this->db->prepare($sql);
 
-        $sql='DELETE FROM `groups_messages` WHERE `groups_messages`.`idsender` = :iduser;';
+            $db->bindValue(':iduser', $this->ID,PDO::PARAM_STR);
 
-        $sql='DELETE FROM `friendships` WHERE `friendships`.`idsender` = :iduser OR `friendships`.`idreceiver` = :iduser;';
+            $db->execute();
 
-        $sql='DELETE FROM `groups_and_users` WHERE `groups_and_users`.`iduser` = :iduser;';
-
-        $sql='DELETE FROM `groups` WHERE `groups`.`idadmin` = :iduser;';
-
-        $sql='DELETE FROM `users` WHERE `users`.`ID` = :iduser;';
-
-        $db->bindValue(':iduser', $this->ID,PDO::PARAM_STR);
-        // $sql='SELECT `name`, `email`, `username` FROM `users`;';
-
-        $db=$this->db->prepare($sql);
-        $db->execute();
+            $this->logout();
+        }
     }
-*/
+
     public function setData($user) {
         $this->ID = $user['ID'];
         $this->name = $user['name'];

@@ -45,6 +45,7 @@ $user->register();
             <label for="password">Senha</label>
             <input name="password" type="password" class="form-control">
           </div>
+          <small class="d-block mb-2">Já possui conta? <a href="login.php">Faça login</a></small>
           <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
       </div>

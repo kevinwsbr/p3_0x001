@@ -37,6 +37,7 @@ $user->login();
             <label for="password">Senha</label>
             <input id="password" name="password" type="password" class="form-control">
           </div>
+          <small class="d-block mb-2">Não tem conta? <a href="register.php">Cadastre-se</a></small>
           <button type="submit" class="btn btn-primary">Entrar</button>
         </form>
       </div>
