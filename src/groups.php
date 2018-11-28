@@ -111,7 +111,9 @@ $group->removeMember();
       <div class="card-body">
         <h5 class="card-title">Membros</h5>
         <ul class="list-unstyled">
+        <?php if (($user->getID() == $group->getIDAdmin())) { ?>
         <li class="d-inline"><a href="users.php?id=<?php echo $user->getUsername() ?>"><?php echo $user->getName() ?></a></li>
+          <?php } ?>
           <?php foreach ($members as $item) {?>
           <div class="d-block">
           <li class="d-inline"><a href="users.php?id=<?php echo $item['username'] ?>"><?php echo $item['name'] ?></a></li>
