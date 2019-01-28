@@ -1,11 +1,7 @@
 <?php
 
-require 'configs/Database.php';
-require 'configs/User.php';
+require_once 'configs/Autoload.php';
 
-$conn = new Database();
+$user = new User($db);
 
-$user = new User($conn->db);
 $user->logout();
-
-?>
