@@ -1,14 +1,11 @@
 <?php
 
-require 'configs/Database.php';
-require 'configs/User.php';
-require 'configs/Group.php';
+require_once 'configs/Autoload.php';
 
-$conn = new Database();
-$conn->protectPage();
+$utils->protectPage();
 
-$user = new User($conn->db);
-$group = new Group($conn->db);
+$user = new User($db);
+$group = new Group($db);
 
 $user->setData($user->getUser($_SESSION['user']['username']));
 $group->register();

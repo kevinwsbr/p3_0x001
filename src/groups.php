@@ -1,19 +1,15 @@
 <?php
 
-require 'configs/Database.php';
-require 'configs/User.php';
-require 'configs/Group.php';
-require 'configs/Message.php';
+require_once 'configs/Autoload.php';
 
-$conn = new Database();
-$conn->protectPage();
+$utils->protectPage();
 
-$user = new User($conn->db);
-$displayedUser = new User($conn->db);
-$message = new Message($conn->db);
+$user = new User($db);
+$displayedUser = new User($db);
+$message = new Message($db);
 
 
-$group = new Group($conn->db);
+$group = new Group($db);
 $group->setData($group->getGroup($_GET['id']));
 $members = $group->getMembers();
 

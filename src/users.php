@@ -1,16 +1,13 @@
 <?php
 
-require 'configs/Database.php';
-require 'configs/User.php';
-require 'configs/Message.php';
+require_once 'configs/Autoload.php';
 
-$conn = new Database();
-$conn->protectPage();
+$utils->protectPage();
 
-$user = new User($conn->db);
-$message = new Message($conn->db);
+$user = new User($db);
+$message = new Message($db);
 
-$displayedUser = new User($conn->db);
+$displayedUser = new User($db);
 
 $user->setData($user->getUser($_SESSION['user']['username']));
 $displayedUser->setData($user->getUser($_GET['id']));
