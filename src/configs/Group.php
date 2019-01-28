@@ -28,28 +28,38 @@ class Group {
     }
 
     public function removeMember() {
-        if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['remove'])) {
-            $sql='DELETE FROM `groups_and_users` WHERE `groups_and_users`.`idgroup` = :idgroup AND `groups_and_users`.`iduser` = :iduser;';
-            
-            $db=$this->db->prepare($sql);
+        try {
+            if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['remove'])) {
+                $sql='DELETE FROM `groups_and_users` WHERE `groups_and_users`.`idgroup` = :idgroup AND `groups_and_users`.`iduser` = :iduser;';
 
-            $db->bindValue(':iduser', $_GET['iduser'], PDO::PARAM_STR);
-            $db->bindValue(':idgroup', $this->ID, PDO::PARAM_STR);
+                $db=$this->db->prepare($sql);
 
-            $db->execute();
+                $db->bindValue(':iduser', $_GET['iduser'], PDO::PARAM_STR);
+                $db->bindValue(':idgroup', $this->ID, PDO::PARAM_STR);
 
-            header('Location: groups.php?id=' . $this->ID);
+                $db->execute();
+
+                header('Location: groups.php?id=' . $this->ID);
+            }
+        } catch(PDOException $e) {
+            echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
         }
+
     }
 
     public function getMembers() {
-        $sql='SELECT `ID`, `name`, `username` FROM `users` INNER JOIN `groups_and_users` ON `users`.`ID` = `groups_and_users`.`iduser` WHERE `groups_and_users`.`idgroup` = :idgroup;';
+        try {
+            $sql='SELECT `ID`, `name`, `username` FROM `users` INNER JOIN `groups_and_users` ON `users`.`ID` = `groups_and_users`.`iduser` WHERE `groups_and_users`.`idgroup` = :idgroup;';
 
-        $db=$this->db->prepare($sql);
-        $db->bindValue(':idgroup', $this->ID, PDO::PARAM_STR);
-        $db->execute();
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':idgroup', $this->ID, PDO::PARAM_STR);
+            $db->execute();
 
-        return $db->fetchAll(PDO::FETCH_ASSOC);
+            return $db->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
+        }
+
     }
 
     public function setData($group) {
@@ -60,38 +70,52 @@ class Group {
     }
 
     public function getGroups() {
-        $sql='SELECT * FROM `groups`;';
+        try {
+            $sql='SELECT * FROM `groups`;';
 
-        $db=$this->db->prepare($sql);
-        $db->execute();
+            $db=$this->db->prepare($sql);
+            $db->execute();
 
-        return $db->fetchAll(PDO::FETCH_ASSOC);
+            return $db->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
+        }
+
     }
 
     public function getGroup($group) {
-        $sql='SELECT * FROM `groups` WHERE `groups`.`ID` = :id ;';
+        try {
+            $sql='SELECT * FROM `groups` WHERE `groups`.`ID` = :id ;';
 
-        $db=$this->db->prepare($sql);
-        $db->bindValue(':id', $group, PDO::PARAM_STR);
-        $db->execute();
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':id', $group, PDO::PARAM_STR);
+            $db->execute();
 
-        return $db->fetch(PDO::FETCH_ASSOC);
+            return $db->fetch(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
+        }
+
     }
 
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD']=='POST') {
-            $sql='INSERT INTO `groups` (`name`,`description`,`idadmin`) VALUES (:name,:description,:idadmin);';
-            
-            $db=$this->db->prepare($sql);
-            $db->bindValue(':name', $_POST['name'],PDO::PARAM_STR);
-            $db->bindValue(':description', $_POST['description'],PDO::PARAM_STR);
-            $db->bindValue(':idadmin', $_SESSION['user']['ID'],PDO::PARAM_STR);
-            
-            $db->execute();
-            
-            header('Location: index.php');
+            try {
+                $sql='INSERT INTO `groups` (`name`,`description`,`idadmin`) VALUES (:name,:description,:idadmin);';
+
+                $db=$this->db->prepare($sql);
+                $db->bindValue(':name', $_POST['name'],PDO::PARAM_STR);
+                $db->bindValue(':description', $_POST['description'],PDO::PARAM_STR);
+                $db->bindValue(':idadmin', $_SESSION['user']['ID'],PDO::PARAM_STR);
+
+                $db->execute();
+
+                header('Location: index.php');
+            } catch(PDOException $e) {
+                echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
+            }
+
         }
     }
 }
-?>
