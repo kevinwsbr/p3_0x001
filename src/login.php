@@ -22,8 +22,8 @@ $user->login();
 
 <body>
   <div class="container">
-    <div class="row">
-      <div class="col col-12">
+    <div class="row" style="height: 320px;margin-top: 160px;">
+      <div class="col col-12 col-md-8 col-lg-4" style="margin: 0 auto;">
         <div class="h4 my-3">Entrar | iFace</div>
         <form method="POST" action="login.php">
           <div class="form-group">
