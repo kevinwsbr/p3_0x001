@@ -29,7 +29,7 @@ $user->updatePassword();
 <?php require_once 'components/sidebar-profile.php'; ?>
 <div class="col-md-6 gedf-main">
     <h4>Editar meu perfil</h4>
-    <form action="alterar-senha.php" method="POST">
+    <form action="change-password.php" method="POST">
         <div class="form-group">
             <label for="password">Nova senha</label>
             <input type="password" class="form-control" id="password" name="password" placeholder="Digite a nova senha">

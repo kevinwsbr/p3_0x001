@@ -50,7 +50,7 @@ $user->deleteMe();
         <label for="email">E-mail</label>
         <input type="email" class="form-control" id="email" name="email" value="<?php echo $user->getEmail(); ?>">
       </div>
-        <small class="d-block mb-2">Clique <a href="alterar-senha.php">aqui</a> para alterar a sua senha.</small>
+        <small class="d-block mb-2">Clique <a href="change-password.php">aqui</a> para alterar a sua senha.</small>
       <button type="submit" class="btn btn-primary">Atualizar</button>
     </form>
     <form action="settings.php?delete=true" method="post">
