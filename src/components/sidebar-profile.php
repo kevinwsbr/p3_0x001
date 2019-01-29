@@ -14,7 +14,7 @@ $requestedFriends = $user->getRequestedFriends();
                     </div>
                     <div class="h7 text-muted">@<?php echo $user->getUsername() ?>
                     </div>
-                    <a class="btn btn-outline-primary btn-sm mt-2" href="../settings.php" role="button">Editar perfil</a>
+                    <a class="btn btn-outline-primary btn-sm mt-2" href="./settings.php" role="button">Editar perfil</a>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
@@ -26,7 +26,7 @@ $requestedFriends = $user->getRequestedFriends();
                         </ul>
                     </li>
                     <li class="list-group-item">
-                        <div class="h6 text-muted">Amigos (pendentes)</div>
+                        <div class="h6 text-muted">Solicitações de amizade</div>
                         <ul class="list-unstyled">
                         <?php foreach ($requestedFriends as $item) {?>
                         <li>
