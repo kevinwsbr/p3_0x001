@@ -47,6 +47,16 @@ class Group {
 
     }
 
+    public function checkMembership($username, $members) {
+        foreach ($members as $member) {
+            if($username === $member['username']) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+
     public function getMembers() {
         try {
             $sql='SELECT `ID`, `name`, `username` FROM `users` INNER JOIN `groups_and_users` ON `users`.`ID` = `groups_and_users`.`iduser` WHERE `groups_and_users`.`idgroup` = :idgroup;';
@@ -60,6 +70,20 @@ class Group {
             echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
         }
 
+    }
+
+    public function addMember($memberID, $groupID){
+      try {
+        $sql='INSERT INTO `groups_and_users` (`idgroup`,`iduser`) VALUES (:idgroup,:iduser);';
+
+        $db=$this->db->prepare($sql);
+        $db->bindValue(':idgroup', $groupID, PDO::PARAM_STR);
+        $db->bindValue(':iduser', $memberID, PDO::PARAM_STR);
+
+        $db->execute();
+      }catch(PDOException $e) {
+        echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
+      }
     }
 
     public function setData($group) {
@@ -111,7 +135,10 @@ class Group {
 
                 $db->execute();
 
-                header('Location: index.php');
+                $lastID = $this->db->lastInsertId();
+                $this->addMember($_SESSION['user']['ID'], $lastID);
+
+                header('Location: groups.php?id=' . $lastID);
             } catch(PDOException $e) {
                 echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
             }
