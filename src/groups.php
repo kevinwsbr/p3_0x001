@@ -89,7 +89,8 @@ $group->removeMember();
     <?php
   } ?>
     <h4>Mensagens do grupo</h4>
-  <?php foreach ($messages as $msg) { ?>
+    <?php if(count($messages) > 0 ) {
+        foreach ($messages as $msg) { ?>
       <div class="card gedf-card my-3">
           <div class="card-header">
               <div class="d-flex justify-content-between align-items-center">
@@ -108,7 +109,11 @@ $group->removeMember();
               </p>
           </div>
       </div>
-  <?php } ?>
+  <?php }
+    } else {
+        echo "<span>Ops, ainda não há nenhuma mensagem aqui!</span>";
+        }?>
+
 </div>
 <div class="col-md-3">
     <div class="card gedf-card">
