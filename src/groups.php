@@ -6,7 +6,7 @@ $utils->protectPage();
 
 $user = new User($db);
 $displayedUser = new User($db);
-$message = new Message($db);
+$message = new GroupMessage($db);
 
 
 $group = new Group($db);
@@ -19,8 +19,8 @@ $user->joinGroup($group->getID());
 $friends = $user->getConfirmedFriends();
 $requestedFriends = $user->getRequestedFriends();
 
-$message->sendGroupMessage($_GET['id']);
-$messages = $message->getGroupMessages($_GET['id']);
+$message->sendMessage($_GET['id']);
+$messages = $message->getMessages($_GET['id']);
 
 $group->removeMember();
 ?>

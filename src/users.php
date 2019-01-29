@@ -5,7 +5,7 @@ require_once 'configs/Autoload.php';
 $utils->protectPage();
 
 $user = new User($db);
-$message = new Message($db);
+$message = new UserMessage($db);
 
 $displayedUser = new User($db);
 
