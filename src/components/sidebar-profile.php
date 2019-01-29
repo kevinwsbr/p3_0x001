@@ -14,21 +14,26 @@ $requestedFriends = $user->getRequestedFriends();
                     </div>
                     <div class="h7 text-muted">@<?php echo $user->getUsername() ?>
                     </div>
-                    <a class="btn btn-outline-primary btn-sm mt-2" href="../settings.php" role="button">Editar perfil</a>
+                    <a class="btn btn-outline-primary btn-sm mt-2" href="./settings.php" role="button">Editar perfil</a>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="h6 text-muted">Amigos</div>
                         <ul class="list-unstyled">
-                        <?php foreach ($friends as $item) {?>
+                            <?php if(count($friends) > 0 ) {
+                        foreach ($friends as $item) {?>
                         <li><a href="users.php?id=<?php echo $item['username'] ?>"><?php echo $item['name'] ?></a></li>
-                        <?php } ?>
+                           <?php }
+                            } else {
+                            echo "<span>Você não possui amigos.</span>";
+                            }?>
                         </ul>
                     </li>
                     <li class="list-group-item">
-                        <div class="h6 text-muted">Amigos (pendentes)</div>
+                        <div class="h6 text-muted">Solicitações de amizade</div>
                         <ul class="list-unstyled">
-                        <?php foreach ($requestedFriends as $item) {?>
+                            <?php if(count($requestedFriends) > 0 ) {
+                        foreach ($requestedFriends as $item) {?>
                         <li>
                         <a href="users.php?id=<?php echo $item['username'] ?>"><?php echo $item['name'] ?></a>
                         <form class="d-inline" action="users.php?id=<?php echo $item['username'] ?>&confirm=true" method="POST">
@@ -38,7 +43,10 @@ $requestedFriends = $user->getRequestedFriends();
                             <button type="submit" class="btn badge badge-danger">Recusar</button>
                         </form>
                         </li>
-                        <?php } ?>
+                        <?php }
+                            } else {
+                                echo "<span>Não há solicitações pendentes.</span>";
+                            }?>
                         </ul>
                     </li>
                 </ul>

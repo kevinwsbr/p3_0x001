@@ -1,16 +1,11 @@
 <?php
 
-require 'configs/Database.php';
-require 'configs/User.php';
-require 'configs/Group.php';
-require 'configs/Message.php';
+require_once 'configs/Autoload.php';
+$utils->protectPage();
 
-$conn = new Database();
-$conn->protectPage();
-
-$user = new User($conn->db);
-$group = new Group($conn->db);
-$message = new Message($conn->db);
+$user = new User($db);
+$group = new Group($db);
+$message = new UserMessage($db);
 
 $groups = $group->getGroups();
 
@@ -25,8 +20,7 @@ $messages = $message->getMessages($user->getID());
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-    crossorigin="anonymous">
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
   <title>iFace</title>
 </head>
 
@@ -35,8 +29,9 @@ $messages = $message->getMessages($user->getID());
 
   <?php require_once 'components/sidebar-profile.php'; ?>
   <div class="col-md-6 gedf-main">
-    <h4>Minhas mensagens</h4>
-    <?php foreach ($messages as $item) {?>       
+    <h4>Minha caixa de entrada</h4>
+      <?php if(count($messages) > 0 ) {
+     foreach ($messages as $item) {?>
     <div class="card gedf-card my-3">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
@@ -55,7 +50,10 @@ $messages = $message->getMessages($user->getID());
         </p>
       </div>
     </div>
-    <?php } ?>
+     <?php }
+      } else {
+          echo "<span>Ops, ainda não há nenhuma mensagem aqui!</span>";
+      }?>
   </div>
   <div class="col-md-3">
     <div class="card gedf-card">
@@ -74,12 +72,9 @@ $messages = $message->getMessages($user->getID());
   </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-    crossorigin="anonymous"></script>
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/popper.min.js"></script>
+  <script src="assets/js/bootstrap.min.js"></script>
 </body>
 
 </html>

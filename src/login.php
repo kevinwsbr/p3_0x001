@@ -1,10 +1,8 @@
 <?php
 
-require 'configs/Database.php';
-require 'configs/User.php';
+require_once 'configs/Autoload.php';
 
-$conn = new Database();
-$user = new User($conn->db);
+$user = new User($db);
 
 $user->login();
 
@@ -17,25 +15,24 @@ $user->login();
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-    crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
   <title>Login | iFace</title>
 </head>
 
 <body>
   <div class="container">
-    <div class="row">
-      <div class="col col-12">
+    <div class="row" style="height: 320px;margin-top: 160px;">
+      <div class="col col-12 col-md-8 col-lg-4" style="margin: 0 auto;">
         <div class="h4 my-3">Entrar | iFace</div>
         <form method="POST" action="login.php">
           <div class="form-group">
             <label for="username">Nome de usuário</label>
-            <input id="username" name="username" type="text" class="form-control">
+            <input required id="username" name="username" type="text" class="form-control">
           </div>
           <div class="form-group">
             <label for="password">Senha</label>
-            <input id="password" name="password" type="password" class="form-control">
+            <input required id="password" name="password" type="password" class="form-control">
           </div>
           <small class="d-block mb-2">Não tem conta? <a href="register.php">Cadastre-se</a></small>
           <button type="submit" class="btn btn-primary">Entrar</button>
