@@ -46,8 +46,8 @@ $message->sendMessage($_GET['id']);
         </h5>
         <h6 class="card-subtitle mb-2 text-muted">@<?php echo $displayedUser->getUsername() ?>
         </h6>
-          <?php
-             if (!$user->checkFriendship($displayedUser->getUsername(), $friends) && $displayedUser->getUsername() != $user->getUsername()) {?>
+          <?php $user->checkRequests();
+             if (!$user->checkFriendship($displayedUser->getUsername(), $friends) && $displayedUser->getUsername() != $user->getUsername() && !$user->checkRequests()) {?>
                  <form action="users.php?id=<?php echo $displayedUser->getUsername() ?>&receiver=<?php echo $displayedUser->getID() ?>&request=true" method="POST">
                      <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Adicionar amigo</button>
                  </form>
