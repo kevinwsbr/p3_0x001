@@ -5,7 +5,7 @@ $utils->protectPage();
 
 $user = new User($db);
 $group = new Group($db);
-$message = new Message($db);
+$message = new UserMessage($db);
 
 $groups = $group->getGroups();
 
@@ -29,8 +29,9 @@ $messages = $message->getMessages($user->getID());
 
   <?php require_once 'components/sidebar-profile.php'; ?>
   <div class="col-md-6 gedf-main">
-    <h4>Minhas mensagens</h4>
-    <?php foreach ($messages as $item) {?>       
+    <h4>Minha caixa de entrada</h4>
+      <?php if(count($messages) > 0 ) {
+     foreach ($messages as $item) {?>
     <div class="card gedf-card my-3">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center">
@@ -49,7 +50,10 @@ $messages = $message->getMessages($user->getID());
         </p>
       </div>
     </div>
-    <?php } ?>
+     <?php }
+      } else {
+          echo "<span>Ops, ainda não há nenhuma mensagem aqui!</span>";
+      }?>
   </div>
   <div class="col-md-3">
     <div class="card gedf-card">
