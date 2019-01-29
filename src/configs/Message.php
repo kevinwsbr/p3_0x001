@@ -14,7 +14,7 @@ class Message {
 
     public function getMessages($user) {
         try {
-            $sql='SELECT `users`.`name`, `users`.`username`, `users_messages`.`content` FROM `users` INNER JOIN `users_messages` ON `users`.`ID` = `users_messages`.`idsender` WHERE `users_messages`.`idreceiver` = :iduser;';
+            $sql='SELECT `users`.`name`, `users`.`username`, `users_messages`.`content` FROM `users` INNER JOIN `users_messages` ON `users`.`ID` = `users_messages`.`idsender` WHERE `users_messages`.`idreceiver` = :iduser ORDER BY `users_messages`.`ID` DESC;';
 
             $db=$this->db->prepare($sql);
             $db->bindValue(':iduser', $user, PDO::PARAM_STR);
@@ -29,7 +29,7 @@ class Message {
 
     public function getGroupMessages($group) {
         try {
-            $sql='SELECT `users`.`name`, `users`.`username`, `groups_messages`.`content` FROM `users` INNER JOIN `groups_messages` ON `users`.`ID` = `groups_messages`.`idsender` WHERE `groups_messages`.`idreceiver` = :idgroup;';
+            $sql='SELECT `users`.`name`, `users`.`username`, `groups_messages`.`content` FROM `users` INNER JOIN `groups_messages` ON `users`.`ID` = `groups_messages`.`idsender` WHERE `groups_messages`.`idreceiver` = :idgroup ORDER BY `groups_messages`.`ID` DESC;';
 
             $db=$this->db->prepare($sql);
             $db->bindValue(':idgroup', $group, PDO::PARAM_STR);
