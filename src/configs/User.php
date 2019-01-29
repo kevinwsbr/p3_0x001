@@ -96,6 +96,26 @@ class User {
         }
     }
 
+    public function updatePassword() {
+        if ($_SERVER['REQUEST_METHOD']=='POST') {
+            try {
+                $utils = new Utils();
+
+                $sql='UPDATE `users` SET `password` = :password WHERE `users`.`username` = :user;';
+
+                $db=$this->db->prepare($sql);
+
+                $db->bindValue(':password', $utils->hash($_POST['password']),PDO::PARAM_STR);
+                $db->bindValue(':user', $_SESSION['user']['username'],PDO::PARAM_STR);
+
+                $db->execute();
+                header('Location: settings.php');
+            } catch(PDOException $e) {
+                echo 'Ops, um erro foi encontrado: ' . $e->getMessage();
+            }
+        }
+    }
+
     public function getName() {
         return $this->name;
     }
@@ -252,13 +272,14 @@ class User {
     {
         try {
             if ($_SERVER['REQUEST_METHOD']=='POST') {
+                $utils = new Utils();
                 $sql='INSERT INTO `users` (`name`,`username`,`email`,`password`) VALUES (:name,:username,:email,:password);';
 
                 $db=$this->db->prepare($sql);
                 $db->bindValue(':name', $_POST['name'],PDO::PARAM_STR);
                 $db->bindValue(':username', $_POST['username'],PDO::PARAM_STR);
                 $db->bindValue(':email', $_POST['email'],PDO::PARAM_STR);
-                $db->bindValue(':password', $this->hash($_POST['password']),PDO::PARAM_STR);
+                $db->bindValue(':password', $utils->hash($_POST['password']),PDO::PARAM_STR);
 
                 $db->execute();
                 header('Location: index.php');
@@ -305,22 +326,6 @@ class User {
                 header('Location: '.$_SESSION["url"]);
             }
         }
-    }
-
-    protected function salt()
-    {
-        $string = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ0123456789';
-        $salt = '';
-        for ($i = 1; $i <= 22; $i++) {
-            $rand = mt_rand(1, strlen($string));
-            $salt .= $string[$rand-1];
-        }
-        return $salt;
-    }
-
-    protected function hash($password)
-    {
-        return crypt($password, '$2a$10$' . $this->salt() . '$');
     }
 
     public function logout()
