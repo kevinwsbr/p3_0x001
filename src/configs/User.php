@@ -14,15 +14,28 @@ class User {
     }
 
     public function getUser($user) {
-        $sql='SELECT * FROM `users` WHERE `users`.`username` = :user ;';
+        try {
+            $sql='SELECT * FROM `users` WHERE `users`.`username` = :user ;';
 
-        $db=$this->db->prepare($sql);
-        $db->bindValue(':user', $user,PDO::PARAM_STR);
-        $db->execute();
+            $db=$this->db->prepare($sql);
+            $db->bindValue(':user', $user,PDO::PARAM_STR);
+            $db->execute();
 
-        return $db->fetch(PDO::FETCH_ASSOC);
+            return $db->fetch(PDO::FETCH_ASSOC);
+        }catch(PDOException $e) {
+            print_r($e);
+            /*switch ($e->getCode()) {
+                case "23000":
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Ops! Já existe um usuário cadastrado com esse e-mail/nome de usuário. Tente novamente! </div>";
+                    break;
+                default:
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Ops! Um erro aconteceu. </div>";
+                    break;
+            }*/
+        }
+
     }
-    
+
     public function getUsers() {
         $sql='SELECT `name`, `email`, `username` FROM `users`;';
 
@@ -56,9 +69,9 @@ class User {
     public function updateData() {
         if ($_SERVER['REQUEST_METHOD']=='POST') {
             $sql='UPDATE `users` SET `name` = :name, `username` = :user, `email` = :email WHERE `users`.`username` = :user;';
-            
+
             $db=$this->db->prepare($sql);
-            
+
             $db->bindValue(':name', $_POST['name'],PDO::PARAM_STR);
             //$db->bindValue(':username', $_POST['username'],PDO::PARAM_STR);
             $db->bindValue(':email', $_POST['email'],PDO::PARAM_STR);
@@ -89,12 +102,12 @@ class User {
     {
         if ($_SERVER['REQUEST_METHOD']=='POST') {
             $sql='INSERT INTO `users_messages` (`idsender`,`idreceiver`,`content`) VALUES (:idsender,:idreceiver,:content);';
-            
+
             $db=$this->db->prepare($sql);
             $db->bindValue(':idsender', $_SESSION['user']['username'],PDO::PARAM_STR);
             $db->bindValue(':idreceiver', $user,PDO::PARAM_STR);
             $db->bindValue(':content', $_POST['message'],PDO::PARAM_STR);
-            
+
             $db->execute();
             header('Location: index.php');
         }
@@ -107,7 +120,7 @@ class User {
         $db->bindValue(':user', $this->ID,PDO::PARAM_STR);
         $db->execute();
 
-        return $db->fetchAll(PDO::FETCH_ASSOC);  
+        return $db->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function confirmFriendship($friend) {
@@ -118,19 +131,28 @@ class User {
             $db->bindValue(':iduser', $this->ID,PDO::PARAM_STR);
             $db->bindValue(':idfriend', $friend,PDO::PARAM_STR);
             $db->execute();
-        } 
+        }
     }
 
     public function rejectFriendship($friend) {
         if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['reject'])) {
 
-            $sql='DELETE FROM `friendships` WHERE `friendships`.`idreceiver` = :iduser AND `friendships`.`idsender` = :idsender;';  
+            $sql='DELETE FROM `friendships` WHERE `friendships`.`idreceiver` = :iduser AND `friendships`.`idsender` = :idsender;';
 
             $db=$this->db->prepare($sql);
             $db->bindValue(':iduser', $this->ID,PDO::PARAM_STR);
             $db->bindValue(':idsender', $friend,PDO::PARAM_STR);
             $db->execute();
-        } 
+        }
+    }
+
+    public function checkFriendship($username, $friends) {
+        foreach ($friends as $friend) {
+            if($username === $friend['username']) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     public function getConfirmedFriends() {
@@ -140,19 +162,19 @@ class User {
         $db->bindValue(':user', $this->ID,PDO::PARAM_STR);
         $db->execute();
 
-        return $db->fetchAll(PDO::FETCH_ASSOC);  
+        return $db->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function sendRequest()
     {
         if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['request'])) {
             $sql='INSERT INTO `friendships` (`idsender`,`idreceiver`,`status`) VALUES (:idsender,:idreceiver,:status);';
-            
+
             $db=$this->db->prepare($sql);
             $db->bindValue(':idsender', $_SESSION['user']['ID'],PDO::PARAM_STR);
             $db->bindValue(':idreceiver', $_GET['receiver'],PDO::PARAM_STR);
             $db->bindValue(':status', "REQUESTED",PDO::PARAM_STR);
-            
+
             $db->execute();
             header('Location: users.php?id=' . $_GET['id']);
         }
@@ -162,11 +184,11 @@ class User {
     {
         if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['join'])) {
             $sql='INSERT INTO `groups_and_users` (`idgroup`,`iduser`) VALUES (:idgroup,:iduser);';
-            
+
             $db=$this->db->prepare($sql);
             $db->bindValue(':idgroup', $group,PDO::PARAM_STR);
             $db->bindValue(':iduser', $_SESSION['user']['ID'],PDO::PARAM_STR);
-            
+
             $db->execute();
             header('Location: groups.php?id=' . $group);
         }
@@ -174,18 +196,30 @@ class User {
 
     public function register()
     {
-        if ($_SERVER['REQUEST_METHOD']=='POST') {
-            $sql='INSERT INTO `users` (`name`,`username`,`email`,`password`) VALUES (:name,:username,:email,:password);';
-            
-            $db=$this->db->prepare($sql);
-            $db->bindValue(':name', $_POST['name'],PDO::PARAM_STR);
-            $db->bindValue(':username', $_POST['username'],PDO::PARAM_STR);
-            $db->bindValue(':email', $_POST['email'],PDO::PARAM_STR);
-            $db->bindValue(':password', $this->hash($_POST['password']),PDO::PARAM_STR);
-            
-            $db->execute();
-            header('Location: index.php');
+        try {
+            if ($_SERVER['REQUEST_METHOD']=='POST') {
+                $sql='INSERT INTO `users` (`name`,`username`,`email`,`password`) VALUES (:name,:username,:email,:password);';
+
+                $db=$this->db->prepare($sql);
+                $db->bindValue(':name', $_POST['name'],PDO::PARAM_STR);
+                $db->bindValue(':username', $_POST['username'],PDO::PARAM_STR);
+                $db->bindValue(':email', $_POST['email'],PDO::PARAM_STR);
+                $db->bindValue(':password', $this->hash($_POST['password']),PDO::PARAM_STR);
+
+                $db->execute();
+                header('Location: index.php');
+            }
+        }catch(PDOException $e) {
+            switch ($e->getCode()) {
+                case "23000":
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Ops! Já existe um usuário cadastrado com esse e-mail/nome de usuário. Tente novamente! </div>";
+                    break;
+                default:
+                    echo "<div class=\"alert alert-danger\" role=\"alert\">Ops! Um erro aconteceu. </div>";
+                    break;
+            }
         }
+
     }
 
     public function login()
@@ -200,8 +234,8 @@ class User {
             }
 
         } elseif ((!empty($_COOKIE['user'])) and (!empty($_COOKIE['password']))) {
-            $cookie['user'] = base64_decode(substr($_COOKIE['blog_ghj'],22,strlen($_COOKIE['user'])));
-            $cookie['password'] = base64_decode(substr($_COOKIE['blog_ghk'],22,strlen($_COOKIE['password'])));
+            $cookie['user'] = base64_decode(substr($_COOKIE['if_usr'],22,strlen($_COOKIE['user'])));
+            $cookie['password'] = base64_decode(substr($_COOKIE['if_pwd'],22,strlen($_COOKIE['password'])));
 
             $user=$this->getUser($cookie['user']);
 
@@ -235,16 +269,15 @@ class User {
     {
         return crypt($password, '$2a$10$' . $this->salt() . '$');
     }
- 
+
     public function logout()
     {
         session_start();
         session_unset();
         session_destroy();
-        setcookie('blog_ghj');
-        setcookie('blog_ghk');
+        setcookie('if_usr');
+        setcookie('if_pwd');
         header('Location: login.php');
     }
-    
+
 }
-?>
