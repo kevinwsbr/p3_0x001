@@ -33,7 +33,7 @@ $group->register();
     <form action="create-group.php" method="POST">
       <div class="form-group">
             <label for="name">Nome</label>
-            <input type="text" class="form-control" id="name" name="name">
+            <input required type="text" class="form-control" id="name" name="name">
           </div>
 
       <div class="form-group">

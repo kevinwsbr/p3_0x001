@@ -71,7 +71,7 @@ $group->removeMember();
                       <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
                           <div class="form-group">
                               <label class="sr-only" for="message">post</label>
-                              <textarea name="message" class="form-control" id="message" rows="3"
+                              <textarea required name="message" class="form-control" id="message" rows="3"
                                         placeholder="Insira aqui sua mensagem..."></textarea>
                           </div>
 

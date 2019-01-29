@@ -28,11 +28,11 @@ $user->login();
         <form method="POST" action="login.php">
           <div class="form-group">
             <label for="username">Nome de usuário</label>
-            <input id="username" name="username" type="text" class="form-control">
+            <input required id="username" name="username" type="text" class="form-control">
           </div>
           <div class="form-group">
             <label for="password">Senha</label>
-            <input id="password" name="password" type="password" class="form-control">
+            <input required id="password" name="password" type="password" class="form-control">
           </div>
           <small class="d-block mb-2">Não tem conta? <a href="register.php">Cadastre-se</a></small>
           <button type="submit" class="btn btn-primary">Entrar</button>

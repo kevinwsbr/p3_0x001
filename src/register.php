@@ -30,23 +30,23 @@ $user->register();
                 <div class="col col-12 col-md-6">
                     <div class="form-group">
                         <label for="username">Nome de usuário</label>
-                        <input name="username" type="text" class="form-control">
+                        <input required name="username" type="text" class="form-control">
                     </div>
                 </div>
                 <div class="col col-12 col-md-6">
                     <div class="form-group">
                         <label for="name">Nome / sobrenome</label>
-                        <input name="name" type="text" class="form-control">
+                        <input required name="name" type="text" class="form-control">
                     </div>
                 </div>
             </div>
           <div class="form-group">
             <label for="email">Email</label>
-            <input name="email" type="email" class="form-control">
+            <input required name="email" type="email" class="form-control">
           </div>
           <div class="form-group">
             <label for="password">Senha</label>
-            <input name="password" type="password" class="form-control">
+            <input required name="password" type="password" class="form-control">
           </div>
           <small class="d-block mb-2">Já possui conta? <a href="login.php">Faça login</a></small>
           <button type="submit" class="btn btn-primary">Registrar</button>
