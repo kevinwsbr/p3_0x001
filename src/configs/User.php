@@ -92,7 +92,7 @@ class User {
                 $db=$this->db->prepare($sql);
 
                 $db->bindValue(':name', $_POST['name'],PDO::PARAM_STR);
-                //$db->bindValue(':username', $_POST['username'],PDO::PARAM_STR);
+                $db->bindValue(':username', $_POST['username'],PDO::PARAM_STR);
                 $db->bindValue(':email', $_POST['email'],PDO::PARAM_STR);
                 $db->bindValue(':user', $_POST['username'],PDO::PARAM_STR);
 
