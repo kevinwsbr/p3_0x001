@@ -13,6 +13,30 @@ class User {
         $this->db = $db;
     }
 
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getID() {
+        return $this->ID;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function setData($user) {
+        $this->ID = $user['ID'];
+        $this->name = $user['name'];
+        $this->username = $user['username'];
+        $this->email = $user['email'];
+        $this->password = $user['password'];
+    }
+
     public function getUser($user) {
         try {
             $sql='SELECT * FROM `users` WHERE `users`.`username` = :user ;';
@@ -23,15 +47,7 @@ class User {
 
             return $db->fetch(PDO::FETCH_ASSOC);
         }catch(PDOException $e) {
-            print_r($e);
-            /*switch ($e->getCode()) {
-                case "23000":
-                    echo "<div class=\"alert alert-danger\" role=\"alert\">Ops! Já existe um usuário cadastrado com esse e-mail/nome de usuário. Tente novamente! </div>";
-                    break;
-                default:
-                    echo "<div class=\"alert alert-danger\" role=\"alert\">Ops! Um erro aconteceu. </div>";
-                    break;
-            }*/
+            echo 'Ops, um erro foi encontrado: ' . $e->getMessage();
         }
 
     }
@@ -66,14 +82,6 @@ class User {
             }
 
         }
-    }
-
-    public function setData($user) {
-        $this->ID = $user['ID'];
-        $this->name = $user['name'];
-        $this->username = $user['username'];
-        $this->email = $user['email'];
-        $this->password = $user['password'];
     }
 
     public function updateData() {
@@ -114,22 +122,6 @@ class User {
                 echo 'Ops, um erro foi encontrado: ' . $e->getMessage();
             }
         }
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getID() {
-        return $this->ID;
-    }
-
-    public function getEmail() {
-        return $this->email;
-    }
-
-    public function getUsername() {
-        return $this->username;
     }
 
     public function getRequestedFriends() {

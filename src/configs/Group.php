@@ -27,6 +27,13 @@ class Group {
         return $this->description;
     }
 
+    public function setData($group) {
+        $this->ID = $group['ID'];
+        $this->IDAdmin = $group['idadmin'];
+        $this->name = $group['name'];
+        $this->description = $group['description'];
+    }
+
     public function removeMember() {
         try {
             if ($_SERVER['REQUEST_METHOD']=='POST' && isset($_GET['remove'])) {
@@ -56,7 +63,6 @@ class Group {
         return 0;
     }
 
-
     public function getMembers() {
         try {
             $sql='SELECT `ID`, `name`, `username` FROM `users` INNER JOIN `groups_and_users` ON `users`.`ID` = `groups_and_users`.`iduser` WHERE `groups_and_users`.`idgroup` = :idgroup;';
@@ -84,13 +90,6 @@ class Group {
       }catch(PDOException $e) {
         echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
       }
-    }
-
-    public function setData($group) {
-        $this->ID = $group['ID'];
-        $this->IDAdmin = $group['idadmin'];
-        $this->name = $group['name'];
-        $this->description = $group['description'];
     }
 
     public function getGroups() {
@@ -142,7 +141,6 @@ class Group {
             } catch(PDOException $e) {
                 echo 'Ops, aconteceu o seguinte erro: ' . $e->getMessage();
             }
-
         }
     }
 }
